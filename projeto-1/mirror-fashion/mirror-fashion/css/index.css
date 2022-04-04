@@ -1,0 +1,92 @@
+/* *{
+  outline: 1px solid red;
+} */
+
+body {
+  padding: 0 10%;
+  
+}
+
+main{
+  background-image: url("../img/body-background.png");
+}
+
+nav {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#header-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#opcoes-do-menu {
+  width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+
+#conteudo-principal{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  
+}
+
+
+#tab-lateral{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+}
+#container-buscar{
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+
+}
+#opcoes{
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+
+}
+
+
+#conteudo-secundario{
+  display: flex;
+  justify-content:space-around;
+}
+
+article .itens {
+  display: flex;
+  flex-direction: column;
+
+}
+
+footer {
+  display: flex;
+  background-image: url("../img/fundo-rodape.png");
+  justify-content: space-between;
+}
+
+#footer-logo{
+  padding: 15px;
+  margin-left: 10%;
+
+
+}
+
+#redes-sociais{ 
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin-left: 25%;
+}
