@@ -4,6 +4,7 @@
 
 body {
   padding: 0 10%;
+  font-family: 'Poppins', sans-serif;
   
 }
 
@@ -28,9 +29,35 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+}
+
+#logo{
+  margin: 10px;
+}
+#carrinho-compras{
+  display: flex;
+  justify-self: right;
+  align-items: center;
+  flex-direction: row-reverse;
+  margin-bottom: 10px;
+
+  /* flex-direction: column; */
+}
+
+#carrinho-compras h1{
+  color: rgb(112, 112, 112);
+  font-size: 12px;
+  margin-bottom: 0;
+  align-self: flex-end;
+  padding: 5px 10px;
 }
 
 
+main section {
+  display: flex;
+
+}
 
 #conteudo-principal{
   display: flex;
@@ -39,37 +66,69 @@ nav {
   
 }
 
-
 #tab-lateral{
   display: flex;
-  justify-content: center;
   flex-direction: column;
-
+  padding: 10px 10px;
+  /* background-color: #ffffff; */
 }
+
 #container-buscar{
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
+  background-color: rgb(193, 197, 201);
+  padding: 20px;
+  border-radius: 2px;
 
 }
+
+#search-container input {
+  border-radius: 10px 10px ;
+  flex-grow: 1;
+}
+
+
 #opcoes{
   display: flex;
   justify-content: flex-end;
   flex-direction: column;
-
+  margin-top: 10px;
+  background-color: rgb(193, 197, 201);
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-radius: 2px;
+  
 }
 
+#opcoes a{
+  padding: 2px;
+  background-color: #ffffff;
+  flex-grow: 1;
+  color: #000;
+  font-weight: bold;
+}
+#opcoes a:hover{
+  background-color: rgb(193, 197, 201);
+}
+
+#destaque-home{
+
+  padding: 5px;
+  flex-grow: 2;
+  
+}
 
 #conteudo-secundario{
   display: flex;
-  justify-content:space-around;
+  justify-content: space-between;
 }
 
-article .itens {
-  display: flex;
-  flex-direction: column;
-
+#novidades, #mais-vendidos{
+  width: 49.8%;
+  height: 800px;
 }
+
 
 footer {
   display: flex;
@@ -77,16 +136,18 @@ footer {
   justify-content: space-between;
 }
 
+
+
 #footer-logo{
   padding: 15px;
   margin-left: 10%;
-
-
 }
 
 #redes-sociais{ 
   display: flex;
   align-items: center;
+  justify-content: space-around;
   padding: 15px;
-  margin-left: 25%;
+  margin-left: 40px;
+  width: 300px;
 }
