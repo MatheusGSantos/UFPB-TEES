@@ -126,9 +126,34 @@ main section {
 
 #novidades, #mais-vendidos{
   width: 49.8%;
-  height: 800px;
+  height: 600px;
 }
 
+.miniature-container {
+  height: 46%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+
+.miniature-container a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.catalog-miniature {
+  width: 240px;
+  height: 240px;
+}
+
+.miniature-description {
+  margin: auto;
+  font-size: 12px;
+
+}
 
 footer {
   display: flex;
