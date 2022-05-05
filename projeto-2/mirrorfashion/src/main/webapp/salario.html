@@ -1,0 +1,30 @@
+<html>
+	<head>
+		
+		<title></title>
+	</head>
+	<body>
+		<form>
+			Informe o salario atual:
+			<input id="salario" type="text">
+			<input id="botao"  name="btsalario" value="Reajustar" type="button">
+		</form>
+		<p id="p1"></p>
+		<p id="p2"></p>
+		<p id="p3"></p>
+		<p id="p4"></p>
+		<script>
+			var controle = document.querySelector("#botao");
+			controle.onclick = function(){
+				var salario = document.querySelector("#salario");	
+				var resultado = document.querySelector("#p1");
+				resultado.textContent = "teste" + salario.value;
+				//console.log("teste");
+				//console.log(input.textContent);
+				//console.log(salario);
+
+
+				}
+		</script>
+	</body>
+</html>
