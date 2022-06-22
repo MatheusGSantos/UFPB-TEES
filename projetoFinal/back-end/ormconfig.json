@@ -1,0 +1,19 @@
+{
+    "name": "default",
+    "type": "postgres",
+    "host": "jelani.db.elephantsql.com",
+    "port": 5432,
+    "username": "dlriwylf",
+    "password": "NItUZtOzbXt7B6eXKwKQEWcBijeDHOD8",
+    "database": "dlriwylf",
+   "entities": [
+      "./src/models/*.ts"
+    ],
+    "migrations":[
+      "./src/typeorm/migrations/*.ts"
+    ],
+    "cli": {
+      "migrationsDir":  "./src/typeorm/migrations"
+    }
+  }
+
