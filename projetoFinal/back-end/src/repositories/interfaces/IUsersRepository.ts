@@ -1,11 +1,10 @@
-import User from "../../models/User";
+import User from "../../models/users/User";
 
 export default interface IUsersRepository {
-
-    findById(id: string): Promise<User | null>;
-    findByEmail(email: string): Promise<User | null>;
-    findAll(): Promise<User[]>;
-    create(user: Pick<User, "name" | "email" | "password">): Promise<User>;
-    update(user: User): Promise<User>;
-    delete(id: string): Promise<void>;
+  findById(id: string): Promise<User | undefined>;
+  findByEmail(email: string): Promise<User | undefined>;
+  findAll(): Promise<User[]>;
+  create(user: Pick<User, "name" | "email" | "password">): Promise<User>;
+  update(user: User): Promise<User>;
+  delete(id: string): Promise<void>;
 }

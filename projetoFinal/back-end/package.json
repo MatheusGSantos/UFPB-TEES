@@ -3,13 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "watch": "src/**/*.ts",
-  "execMap": {
-    "ts": "ts-node"
-  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/server.ts"
+    "build": "tsc",
+    "dev:server": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts",
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +18,8 @@
     "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^8.5.1",
     "nodemon": "^2.0.16",
+    "pg": "^8.0.0",
+    "reflect-metadata": "^0.1.13",
     "typeorm": "0.2.45",
     "uuid": "^8.3.2"
   },
