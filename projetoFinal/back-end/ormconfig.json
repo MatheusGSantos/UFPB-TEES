@@ -6,7 +6,7 @@
   "username": "dlriwylf",
   "password": "NItUZtOzbXt7B6eXKwKQEWcBijeDHOD8",
   "database": "dlriwylf",
-  "entities": ["./src/models/*.ts"],
+  "entities": ["./src/models/**/*.ts"],
   "migrations": ["./src/database/migrations/*.ts"],
   "cli": {
     "migrationsDir": "./src/database/migrations"

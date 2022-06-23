@@ -1,22 +1,27 @@
+import AppError from "../errors/AppError";
 import User from "../models/users/User";
 import UsersRepository from "../repositories/UsersRepository";
 
 class CreateUserService {
-  public async execute({
-    name,
-    email,
-    password,
-  }: Pick<User, "name" | "email" | "password">) {
-    const userRepository = new UsersRepository();
+    public async execute({
+        name,
+        email,
+        password,
+    }: Pick<User, "name" | "email" | "password">) {
+        const userRepository = new UsersRepository();
 
-    const user = await userRepository.create({
-      name,
-      email,
-      password,
-    });
+        if (await userRepository.findByEmail(email)) {
+            throw new AppError("User already exists", 409);
+        }
 
-    return user;
-  }
+        const user = await userRepository.create({
+            name,
+            email,
+            password,
+        });
+
+        return user;
+    }
 }
 
 export default CreateUserService;
