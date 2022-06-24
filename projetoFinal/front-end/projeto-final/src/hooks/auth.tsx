@@ -5,7 +5,6 @@ import React, {
     useMemo,
     useState,
 } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../services/api";
 import {
@@ -33,7 +32,7 @@ interface SignInCredentials {
 
 interface AuthContextData {
     user: User;
-    signIn(credentials: SignInCredentials, rememberMe: boolean): Promise<void>;
+    signIn(credentials: SignInCredentials, cb: () => void): Promise<void>;
     signOut(): void;
     updateUser(user: User): void;
 }
@@ -43,7 +42,6 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
 }) => {
-    const navigate = useNavigate();
     const [data, setData] = useState<AuthState>(() => {
         const token = getLocalStorageItem("token");
         const user = getLocalStorageItem("user");
@@ -65,20 +63,18 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }, []);
 
     const signIn = useCallback(
-        async ({ email, password }: SignInCredentials, rememberMe: boolean) => {
+        async ({ email, password }: SignInCredentials, cb: () => void) => {
             const id = toast.loading("Submitting...");
             try {
-                const response = await api.post("/login", {
+                const response = await api.post("/sessions", {
                     email,
                     password,
                 });
 
                 const { user, token } = response.data;
 
-                if (rememberMe) {
-                    setLocalStorageItem("token", token);
-                    setLocalStorageItem("user", user);
-                }
+                setLocalStorageItem("token", token);
+                setLocalStorageItem("user", user);
 
                 api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
@@ -91,7 +87,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
                     hideProgressBar: false,
                     closeOnClick: true,
                 });
-                navigate("/");
+                cb();
+                
             } catch (err: any) {
                 toast.update(id, {
                     render: `Error: ${err?.response?.data?.message}`,
@@ -103,7 +100,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
                 });
             }
         },
-        [navigate]
+        []
     );
 
     const updateUser = useCallback(

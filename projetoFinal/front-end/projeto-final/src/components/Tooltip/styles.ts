@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export const Container = styled.div<{ inverted: boolean }>`
     position: relative;
-    z-index: 2;
     span {
         width: 300px;
         background: #4b3387;

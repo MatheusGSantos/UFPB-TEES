@@ -1,18 +1,20 @@
 import { FormHandles } from "@unform/core";
 import { Form } from "@unform/web";
 import React, { useCallback, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Slide, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as Yup from "yup";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
+import Modal from "../../components/Modal";
 import Tooltip from "../../components/Tooltip";
 import getValidationErrors from "../../utils/getValidationErrors";
 
 import { FaSearch } from "react-icons/fa";
 import { FiHelpCircle, FiLock, FiMail, FiUser } from "react-icons/fi";
+import { GrFormClose } from "react-icons/gr";
 import { HiOutlineIdentification } from "react-icons/hi";
+import { useAuth } from "../../hooks/auth";
 import api from "../../services/api";
 import { Container, Content } from "./styles";
 
@@ -28,6 +30,12 @@ interface UpdateUserFormData {
     email: string;
 }
 
+interface LoginFormData {
+    email: string;
+    password: string;
+    stayLogged: boolean;
+}
+
 interface User {
     id: string;
     name: string;
@@ -40,18 +48,20 @@ interface User {
 const Home: React.FC = () => {
     const createUserFormRef = useRef<FormHandles>(null);
     const updateUserFormRef = useRef<FormHandles>(null);
+    const loginFormRef = useRef<FormHandles>(null);
+
+    const { signIn, user } = useAuth();
 
     const [searchInputValue, setSearchInputValue] = useState("");
     const [idInputValue, setIdInputValue] = useState("");
 
-    const navigate = useNavigate();
+    const [modalVisible, setModalVisible] = useState(false);
 
     const [users, setUsers] = useState<User[]>([]);
 
-    const handleSubmitSearch = useCallback(async () => {
-        setSearchInputValue("");
-
-        if (searchInputValue === "") {
+    const handleSubmitSearch = async () => {
+        if (!searchInputValue.length) {
+            console.info("Search input is empty");
             try {
                 const response = await api.get("/users");
                 setUsers(response.data);
@@ -59,16 +69,18 @@ const Home: React.FC = () => {
                 console.log(err);
             }
         } else {
+            console.info("Searching for user");
             try {
                 const response = await api.get(
                     `/users?email=${searchInputValue}`
                 );
-                setUsers(response.data);
+                setUsers([response.data]);
             } catch (err) {
                 console.log(err);
             }
+            setSearchInputValue("");
         }
-    }, []);
+    }
 
     const handleCreateUserSubmit = useCallback(
         async (data: CreateUserFormData) => {
@@ -147,7 +159,7 @@ const Home: React.FC = () => {
         []
     );
 
-    const handleDeleteUser = useCallback(async () => {
+    const handleDeleteUser = async () => {
         if (idInputValue) {
             toast.promise(api.delete(`/users/${idInputValue}`), {
                 pending: "Submitting...",
@@ -164,15 +176,52 @@ const Home: React.FC = () => {
                 },
             });
         }
-    }, []);
+    }
+
+    const handleLoginSubmit = useCallback(
+        async (data: LoginFormData) => {
+            try {
+                loginFormRef.current?.setErrors({});
+
+                const schema = Yup.object().shape({
+                    email: Yup.string()
+                        .required("E-mail required")
+                        .email("Insert a valid e-mail"),
+                    password: Yup.string().required("Password required"),
+                });
+
+                await schema.validate(data, {
+                    abortEarly: false,
+                });
+
+                await signIn({
+                    email: data.email,
+                    password: data.password,
+                }, () => setModalVisible(false));
+            } catch (err) {
+                if (err instanceof Yup.ValidationError) {
+                    const errors = getValidationErrors(err);
+
+                    loginFormRef.current?.setErrors(errors);
+                }
+            }
+        },
+        [signIn]
+    );
 
     return (
         <>
             <Container>
                 <nav>
-                    <div>
+                    <div
+                        id="authenticated-wrapper"
+                        onClick={() => setModalVisible(true)}
+                    >
                         <h3>Authenticated</h3>
-                        <div id="status-indicator" />
+                        <div
+                            id="status-indicator"
+                            className={user ? "authenticated" : ""}
+                        />
                     </div>
                 </nav>
                 <Content>
@@ -204,14 +253,22 @@ const Home: React.FC = () => {
                                 />
                                 <FaSearch
                                     color="#A0A0A0"
-                                    onClick={handleSubmitSearch}
+                                    onClick={() => handleSubmitSearch()}
                                     style={{
                                         cursor: "pointer",
                                         marginLeft: "10px",
                                     }}
                                 />
                             </div>
-                            <div id="search-outcome"></div>
+                            <div id="search-outcome">
+                                {users.map((user) => (
+                                    <div key={user.id} className="user-wrapper">
+                                        <p className="id"><strong>id:</strong> {user.id}</p>
+                                        <p className="info"><strong>name:</strong> {user.name}</p>
+                                        <p className="info"><strong>email:</strong> {user.email}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </section>
 
                         <section>
@@ -226,7 +283,7 @@ const Home: React.FC = () => {
                             </div>
 
                             <Form
-                                id="form-registration"
+                                className="form-registration"
                                 ref={createUserFormRef}
                                 onSubmit={handleCreateUserSubmit}
                             >
@@ -265,7 +322,7 @@ const Home: React.FC = () => {
                                 </Tooltip>
                             </div>
                             <Form
-                                id="form-registration"
+                                className="form-registration"
                                 ref={updateUserFormRef}
                                 onSubmit={handleUpdateUserSubmit}
                             >
@@ -321,6 +378,37 @@ const Home: React.FC = () => {
                         </section>
                     </div>
                 </Content>
+                <Modal visible={modalVisible}>
+                    <div className="modal-wrapper">
+                        <div className="modal-header">
+                            <GrFormClose
+                                size={20}
+                                onClick={() => setModalVisible(false)}
+                            />
+                        </div>
+                        <Form
+                            className="form-registration"
+                            ref={loginFormRef}
+                            onSubmit={handleLoginSubmit}
+                        >
+                            <h1>Login</h1>
+                            <Input
+                                name="email"
+                                placeholder="Email"
+                                icon={FiMail}
+                            />
+                            <Input
+                                name="password"
+                                type="password"
+                                placeholder="Senha"
+                                icon={FiLock}
+                            />
+                            <Button style={{ margin: "2rem 0" }} type="submit">
+                                Login
+                            </Button>
+                        </Form>
+                    </div>
+                </Modal>
             </Container>
             <ToastContainer
                 position="top-right"

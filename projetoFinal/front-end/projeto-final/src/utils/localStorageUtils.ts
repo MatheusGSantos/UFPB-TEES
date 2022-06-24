@@ -4,7 +4,7 @@ export const setLocalStorageItem = (key: AvailableKeys, value: any): void => {
   localStorage.setItem(
     `@CRUD:${key}`,
     typeof value === 'string' ? value : JSON.stringify(value),
-  );
+  ); 
 };
 
 export const getLocalStorageItem = (key: AvailableKeys): any => {
