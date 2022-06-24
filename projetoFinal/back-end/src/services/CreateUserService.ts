@@ -1,3 +1,4 @@
+import { hash } from "bcrypt";
 import AppError from "../errors/AppError";
 import User from "../models/users/User";
 import UsersRepository from "../repositories/UsersRepository";
@@ -14,13 +15,18 @@ class CreateUserService {
             throw new AppError("User already exists", 409);
         }
 
+        const hashedPassword = await hash(password, 8);
+
         const user = await userRepository.create({
             name,
             email,
-            password,
+            password: hashedPassword,
         });
 
-        return user;
+        let userWithoutPassword: Partial<User> = {...user};
+        delete userWithoutPassword.password;
+
+        return userWithoutPassword;
     }
 }
 

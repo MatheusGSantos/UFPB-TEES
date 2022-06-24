@@ -7,7 +7,7 @@ class UpdateUserService {
     public async execute(
         id: string,
         newUserData: Partial<User>
-    ): Promise<User> {
+    ): Promise<Partial<User>> {
         if(!validateUUIDv4(id)) {
           throw new AppError("Invalid id", 400);
         }
@@ -24,7 +24,12 @@ class UpdateUserService {
             ...newUserData
         }
 
-        return await usersRepository.update(user);
+        await usersRepository.update(user);
+
+        let userWithoutPassword: Partial<User> = {...user};
+        delete userWithoutPassword.password;
+
+        return userWithoutPassword;
         
     }
 }
