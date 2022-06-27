@@ -28,7 +28,7 @@
             "get": {
                 "summary": "Lista todos os usuários",
                 "description": "Retorna a lista de todos os usuários",
-                "tags": ["users"],
+                "tags": ["Users"],
                 "parameters": [
                     {
                         "description": " Nenhum parametro e exigido, retorna todos os usuarios "
@@ -60,7 +60,7 @@
             "post": {
                 "summary": "Cadastra um novo usuario",
                 "description": "Cadastra um novo usuario se ainda não existir, retorna um error se o ususario já existe",
-                "tags": ["users"],
+                "tags": ["Users"],
                 "parameters": [
                     {
                         "in": "body",
@@ -169,7 +169,7 @@
             }
         },
 
-        "/users/:id": {
+        "/users/{id}": {
             "patch": {
                 "summary": "Atualiza um usuario",
                 "description": "Atualiza um usuario ja existente, para atualizar e preciso esta autenticado",
