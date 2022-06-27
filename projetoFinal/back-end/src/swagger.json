@@ -1,0 +1,293 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Projeto final CRUD API",
+        "version": "1.0.0",
+        "descripition": "Documentação da API Projeto final CRUD Backend Para diciplina de Topicos Especiais Em computação",
+
+        "contact": {
+            "name": "Github Repository",
+            "email": "",
+            "url": "https://github.com/MatheusGSantos/UFPB-TEES"
+        }
+    },
+
+    "servers": [
+        {
+            "url": "http://localhost:3333",
+            "descripiton": "Servidor local"
+        },
+        {
+            "url": "",
+            "descripiton": "Deploy"
+        }
+    ],
+
+    "paths": {
+        "/users": {
+            "get": {
+                "summary": "Lista todos os usuários",
+                "description": "Retorna a lista de todos os usuários",
+                "tags": ["users"],
+                "parameters": [
+                    {
+                        "description": " Nenhum parametro e exigido, retorna todos os usuarios "
+                    },
+                    {
+                        "in": "query",
+                        "id": "uuid",
+                        "required": false,
+                        "description": "Se passado um ID de um usuario ja existente, este sera retornado "
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/user"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not foud"
+                    }
+                }
+            },
+
+            "post": {
+                "summary": "Cadastra um novo usuario",
+                "description": "Cadastra um novo usuario se ainda não existir, retorna um error se o ususario já existe",
+                "tags": ["users"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "Nome": "string",
+                        "required": true,
+                        "description": "Nome para um novo usuario"
+                    },
+                    {
+                        "in": "body",
+                        "email": "string",
+                        "required": true,
+                        "description": "Email para um novo usuario"
+                    },
+                    {
+                        "in": "body",
+                        "senha": "string",
+                        "required": true,
+                        "description": "Senha para um novo usuario "
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/users"
+                            }
+                        }
+                    }
+                },
+
+                "responses": {
+                    "200": {
+                        "description": "Usuário Criado com Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/userAuthenticatedSucessful"
+                                },
+                                "examples": {
+                                    "id": "b36a11bc-4d32-43a4-9325-47b1b76ffb1d",
+                                    "name": "name",
+                                    "email": "email@email.com",
+                                    "toke": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NTYwOTU0MzEsImV4cCI6MTY1NjE4MTgzMSwic3ViIjoiYjM2YTExYmMtNGQzMi00M2E0LTkzMjUtNDdiMWI3NmZmYjFkIn0.EUit_8DtcSUNXSHCDIrG_3XkxulTYjEi3nJZ8JJVldk"
+                                }
+                            }
+                        }
+                    },
+
+                    "409": {
+                        "description": "User already exists"
+                    }
+                }
+            }
+        },
+
+        "/sessions": {
+            "post": {
+                "summary": "Autentição no app para alterar e deletar um usuario existente",
+                "description": "A atuenticação dura 1 dia, e feita araves de JWT dando permissão ao usuario logado a Deletar e atualizar usuarios ja existentes",
+                "tags": ["Autenticação"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "email": "string",
+                        "senha": "string",
+                        "description": "Email para o usuario ja cadastrado",
+                        "required": true
+                    },
+                    {
+                        "in": "body",
+                        "senha": "string",
+                        "description": "Senha para o usuario ja cadastrado",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/authenticatedUser"
+                            },
+                            "example": {
+                                "email": "usuario@existente.com",
+                                "senha": "senhaValida"
+                            }
+                        }
+                    }
+                },
+
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/userAuthenticatedSucessful"
+                                }
+                            }
+                        }
+                    },
+
+                    "404": {
+                        "description": "Password does not match or User not found"
+                    }
+                }
+            }
+        },
+
+        "/users/:id": {
+            "patch": {
+                "summary": "Atualiza um usuario",
+                "description": "Atualiza um usuario ja existente, para atualizar e preciso esta autenticado",
+                "tags": ["Rotas autenticadas"],
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "id": "uuid",
+                        "description": "ID do usuario ja cadastrado ",
+                        "required": true
+                    },
+                    {
+                        "in": "body",
+                        "email": "string",
+                        "description": "Novo email a ser alterdo"
+                    },
+                    {
+                        "in": "body",
+                        "senha": "string",
+                        "description": "Novo email a ser alterdo"
+                    }
+                ],
+
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            },
+
+            "delete": {
+                "summary": "Delete um usuario",
+                "description": "Delete um usuario ja existente, para deletar e preciso esta autenticado",
+                "tags": ["Rotas autenticadas"],
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "id": "uuid",
+                        "in": "query",
+                        "description": "ID do usuario ja cadastrado ",
+                        "required": true
+                    }
+                ],
+
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+
+    "components": {
+        "schemas": {
+            "users": {
+                "type": "Array",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    }
+                }
+            },
+            "authenticatedUser": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "userAuthenticatedSucessful": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "uuid"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            },
+            "user": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+
+                    "id": {
+                        "type": "uuid"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
